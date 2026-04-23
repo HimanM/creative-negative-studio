@@ -117,61 +117,64 @@ export default function Studio({ isActive }: StudioProps) {
   return (
     <div ref={containerRef} className="absolute inset-0 w-full h-full flex flex-col md:flex-row">
       
-      {/* Left 65% - Content */}
-      <div className="relative w-full md:w-[65%] h-[70%] md:h-full">
-        <div className="relative w-full h-full flex flex-col pt-28 md:pt-40 pb-6 md:pb-8 px-6 md:px-16 overflow-y-auto">
+      {/* Left 65% - Content with scrim */}
+      <div className="relative w-full md:w-[65%] h-[75%] md:h-full overflow-hidden">
+        <div className="relative w-full h-full flex flex-col justify-center pt-24 md:pt-32 pb-6 md:pb-8 px-6 md:px-16 overflow-hidden">
           <div className="flex flex-col md:flex-row gap-8 h-full">
             {/* Image */}
             <div className="md:w-[45%] h-[35vh] md:h-full flex-shrink-0">
-              <div ref={imageRef} className="w-full h-full overflow-hidden">
+              <div ref={imageRef} className="w-full h-full overflow-hidden relative">
                 <img
                   src="/studio.png"
                   alt="Studio atmosphere"
                   className="w-full h-full object-cover grayscale opacity-80"
                 />
+                
+                {/* Manifesto over Image */}
+                <div className="absolute top-4 left-4 right-4 md:top-6 md:left-6 z-20 pointer-events-none drop-shadow-md">
+                  <span className="block font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase mb-2 md:mb-4 text-white/80" ref={el => specItemsRef.current[6] = el}>
+                    MANIFESTO //
+                  </span>
+                  <div className="font-sans font-black text-xl md:text-3xl lg:text-4xl uppercase leading-tight tracking-normal text-white max-w-[90%] md:max-w-[80%]">
+                    {manifesto.map((line, i) => (
+                      <span key={i} ref={el => manifestoRef.current[i] = el} className="block mb-1 md:mb-2">
+                        {line}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Spec Sheet (Glassmorphism) */}
-            <div className="md:w-[55%] flex flex-col justify-between backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl p-6 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]">
+            {/* Spec Sheet */}
+            <div className="md:w-[55%] flex flex-col justify-between text-white drop-shadow-md">
               <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                 {specs.map((spec, i) => (
                   <div
                     key={i}
                     ref={el => specItemsRef.current[i] = el}
-                    className="border-b border-white/15 pb-2"
+                    className="border-b border-white pb-2"
                   >
-                    <p className="text-[8px] md:text-[9px] font-light tracking-widest uppercase text-white/40">{spec.label}</p>
-                    <p className="text-[10px] md:text-[12px] font-semibold tracking-wider uppercase text-white/90 mt-0.5">{spec.value}</p>
+                    <p className="font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase">{spec.label}</p>
+                    <p className="font-sans text-xs md:text-sm font-medium tracking-wide uppercase mt-0.5">{spec.value}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="my-6 md:my-0">
-                <p className="text-[8px] md:text-[9px] font-light tracking-widest uppercase text-white/30 mb-2">MANIFESTO //</p>
-                <div className="font-display text-lg md:text-2xl uppercase leading-[1] tracking-[-0.02em] text-white/80">
-                  {manifesto.map((line, i) => (
-                    <span key={i} ref={el => manifestoRef.current[i] = el} className="block">
-                      {line}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
               <div>
-                <p className="text-[8px] md:text-[9px] font-light tracking-widest uppercase text-white/30 mb-3">TEAM //</p>
+                <p className="font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase mb-3">TEAM //</p>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                   {teamMembers.map((member, i) => (
-                    <div key={i} className="border-l border-white/15 pl-3">
+                    <div key={i} className="border-l border-white pl-3">
                       <span
                         ref={el => teamNamesRef.current[i] = el}
-                        className="block text-[11px] md:text-[12px] font-semibold tracking-wider uppercase text-white/90"
+                        className="block font-sans text-xs md:text-sm font-medium tracking-wide uppercase"
                       >
                         {member.name}
                       </span>
                       <span
                         ref={el => teamRolesRef.current[i] = el}
-                        className="block text-[8px] md:text-[9px] font-light tracking-widest uppercase text-white/40 mt-0.5"
+                        className="block font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase mt-0.5"
                       >
                         {member.role}
                       </span>
@@ -185,8 +188,8 @@ export default function Studio({ isActive }: StudioProps) {
       </div>
 
       {/* Right 35% - Title (Negative effect) */}
-      <div className="w-full md:w-[35%] h-[30%] md:h-full flex items-center justify-center pointer-events-none">
-        <div className="font-display text-[22vw] md:text-[12vw] uppercase leading-[0.8] tracking-[-0.05em] select-none text-right mix-blend-difference text-white whitespace-nowrap">
+      <div className="w-full md:w-[35%] h-[25%] md:h-full flex items-center justify-center pb-20 md:pb-0 pointer-events-none">
+        <div className="font-display font-black text-[22vw] md:text-[12vw] uppercase leading-[0.8] tracking-normal select-none text-right mix-blend-difference text-white whitespace-nowrap">
           {"STUDIO".split('').map((letter, i) => (
             <span key={i} ref={el => titleLettersRef.current[i] = el} className="inline-block opacity-0 translate-y-[50px]">
               {letter}

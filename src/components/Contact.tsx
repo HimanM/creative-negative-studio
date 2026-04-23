@@ -90,8 +90,8 @@ export default function Contact({ isActive }: ContactProps) {
     <div ref={containerRef} className="absolute inset-0 w-full h-full flex flex-col md:flex-row">
       
       {/* Left 40% - Title (Negative effect) */}
-      <div className="w-full md:w-[40%] h-[30%] md:h-full flex items-center justify-center md:justify-start px-10 pointer-events-none">
-        <div className="font-display text-[18vw] md:text-[12vw] uppercase leading-[0.8] tracking-normal select-none mix-blend-difference text-white whitespace-nowrap">
+      <div className="w-full md:w-[40%] h-[25%] md:h-full flex items-center justify-center md:justify-start px-6 md:px-10 pt-24 md:pt-0 pointer-events-none">
+        <div className="font-display font-black text-[22vw] md:text-[12vw] uppercase leading-[0.8] tracking-normal select-none mix-blend-difference text-white whitespace-nowrap">
           {"CONTACT".split('').map((letter, i) => (
             <span key={i} ref={el => titleLettersRef.current[i] = el} className="inline-block opacity-0 translate-y-[50px]">
               {letter}
@@ -101,71 +101,71 @@ export default function Contact({ isActive }: ContactProps) {
       </div>
 
       {/* Right 60% - Content */}
-      <div className="relative w-full md:w-[60%] h-[70%] md:h-full">
-        <div className="relative w-full h-full flex items-center justify-center px-6 md:px-16 pt-28 md:pt-40 pb-10 overflow-y-auto">
+      <div className="relative w-full md:w-[60%] h-[75%] md:h-full overflow-hidden text-white drop-shadow-md">
+        <div className="relative w-full h-full flex items-center justify-center px-6 md:px-16 pt-6 md:pt-32 pb-24 md:pb-6 overflow-hidden">
           <form
             onSubmit={handleSubmit}
-            className="w-full max-w-[600px] flex flex-col gap-6 md:gap-8 backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl p-6 md:p-10 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]"
+            className="w-full max-w-[600px] flex flex-col gap-6 md:gap-8"
           >
             {/* Header micro-text */}
             <div className="mb-2 md:mb-4">
-              <p className="text-[8px] md:text-[9px] font-light tracking-widest uppercase text-white/30">
+              <p className="font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase text-white/50">
                 INQUIRIES // COLLABORATIONS // COMMISSIONS
               </p>
             </div>
 
             {/* Name */}
             <div ref={el => inputsRef.current[0] = el}>
-              <label className="text-[8px] md:text-[9px] font-semibold tracking-widest uppercase text-white/40 block mb-1.5">
+              <label className="font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase block mb-1.5">
                 NAME
               </label>
               <input
                 type="text"
                 value={formData.name}
                 onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                className="w-full bg-transparent border-b border-white/20 outline-none text-white text-[11px] md:text-[13px] font-light tracking-wider uppercase py-2 transition-colors duration-300 focus:border-[#f46830] placeholder:text-white/15"
+                className="w-full bg-transparent border-b border-white/20 outline-none text-white font-sans text-xs md:text-sm font-medium tracking-wide uppercase py-2 transition-colors duration-300 focus:border-white placeholder:text-white/30"
                 placeholder="YOUR FULL NAME"
               />
             </div>
 
             {/* Email */}
             <div ref={el => inputsRef.current[1] = el}>
-              <label className="text-[8px] md:text-[9px] font-semibold tracking-widest uppercase text-white/40 block mb-1.5">
+              <label className="font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase block mb-1.5">
                 EMAIL
               </label>
               <input
                 type="email"
                 value={formData.email}
                 onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full bg-transparent border-b border-white/20 outline-none text-white text-[11px] md:text-[13px] font-light tracking-wider uppercase py-2 transition-colors duration-300 focus:border-[#f46830] placeholder:text-white/15"
+                className="w-full bg-transparent border-b border-white/20 outline-none text-white font-sans text-xs md:text-sm font-medium tracking-wide uppercase py-2 transition-colors duration-300 focus:border-white placeholder:text-white/30"
                 placeholder="YOUR@EMAIL.COM"
               />
             </div>
 
             {/* Subject */}
             <div ref={el => inputsRef.current[2] = el}>
-              <label className="text-[8px] md:text-[9px] font-semibold tracking-widest uppercase text-white/40 block mb-1.5">
+              <label className="font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase block mb-1.5">
                 SUBJECT
               </label>
               <input
                 type="text"
                 value={formData.subject}
                 onChange={e => setFormData(prev => ({ ...prev, subject: e.target.value }))}
-                className="w-full bg-transparent border-b border-white/20 outline-none text-white text-[11px] md:text-[13px] font-light tracking-wider uppercase py-2 transition-colors duration-300 focus:border-[#f46830] placeholder:text-white/15"
+                className="w-full bg-transparent border-b border-white/20 outline-none text-white font-sans text-xs md:text-sm font-medium tracking-wide uppercase py-2 transition-colors duration-300 focus:border-white placeholder:text-white/30"
                 placeholder="PROJECT INQUIRY"
               />
             </div>
 
             {/* Message */}
             <div ref={el => inputsRef.current[3] = el}>
-              <label className="text-[8px] md:text-[9px] font-semibold tracking-widest uppercase text-white/40 block mb-1.5">
+              <label className="font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase block mb-1.5">
                 MESSAGE
               </label>
               <textarea
                 value={formData.message}
                 onChange={e => setFormData(prev => ({ ...prev, message: e.target.value }))}
                 rows={3}
-                className="w-full bg-transparent border-b border-white/20 outline-none text-white text-[11px] md:text-[13px] font-light tracking-wider uppercase py-2 resize-none transition-colors duration-300 focus:border-[#f46830] placeholder:text-white/15"
+                className="w-full bg-transparent border-b border-white/20 outline-none text-white font-sans text-xs md:text-sm font-medium tracking-wide uppercase py-2 resize-none transition-colors duration-300 focus:border-white placeholder:text-white/30"
                 placeholder="DESCRIBE YOUR PROJECT..."
               />
             </div>
@@ -179,13 +179,12 @@ export default function Contact({ isActive }: ContactProps) {
               >
                 <span
                   ref={submitTextRef}
-                  className="font-display text-3xl md:text-5xl uppercase tracking-[-0.02em] leading-none"
+                  className="font-sans font-black text-xl md:text-3xl uppercase leading-none tracking-normal"
                 >
                   SEND MESSAGE
                 </span>
                 <Send className="w-4 h-4 md:w-6 md:h-6 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
               </button>
-              <div className="w-12 h-[2px] bg-[#f46830] mt-2 opacity-60" />
             </div>
           </form>
         </div>

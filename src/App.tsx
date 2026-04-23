@@ -19,18 +19,86 @@ const pages: { key: PageKey; label: string }[] = [
   { key: 'contact', label: 'Contact' },
 ];
 
-
+const pagesArray = pages.map(p => p.key);
 
 export default function App() {
+  const [currentPage, setCurrentPage] = useState<PageKey>(() => {
+    const hash = window.location.hash.replace('#', '');
+    return pages.some(p => p.key === hash) ? (hash as PageKey) : 'home';
+  });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [cursorScale, setCursorScale] = useState(1);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState<PageKey>('home');
 
   const navIndicatorRef = useRef<HTMLDivElement>(null);
   const navLinksRef = useRef<(HTMLAnchorElement | null)[]>([]);
 
-  // Mouse tracking
+  const navigate = useCallback((page: PageKey) => {
+    setCurrentPage(page);
+    window.location.hash = page;
+    setIsMenuOpen(false);
+  }, []);
+
+  // Sync with Hash
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (pagesArray.includes(hash as PageKey)) {
+        setCurrentPage(hash as PageKey);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [pagesArray]);
+
+  // Wheel and Touch navigation
+  useEffect(() => {
+    let lastScrollTime = 0;
+    let touchStartY = 0;
+
+    const handleNavigate = (direction: 1 | -1) => {
+      const now = Date.now();
+      if (now - lastScrollTime < 1000) return;
+      const currentIndex = pagesArray.indexOf(currentPage);
+      if (direction === 1 && currentIndex < pagesArray.length - 1) {
+        navigate(pagesArray[currentIndex + 1]);
+        lastScrollTime = now;
+      } else if (direction === -1 && currentIndex > 0) {
+        navigate(pagesArray[currentIndex - 1]);
+        lastScrollTime = now;
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > 30) {
+        handleNavigate(e.deltaY > 0 ? 1 : -1);
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaY = touchStartY - touchEndY;
+      if (Math.abs(deltaY) > 50) {
+        handleNavigate(deltaY > 0 ? 1 : -1);
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchend', handleTouchEnd);
+    
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [currentPage, navigate, pagesArray]);
+
+  // Global mouse tracking
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
@@ -79,12 +147,6 @@ export default function App() {
         });
       }
     }
-  }, [currentPage]);
-
-  const navigate = useCallback((page: PageKey) => {
-    if (page === currentPage) return;
-    setCurrentPage(page);
-    setIsMenuOpen(false);
   }, [currentPage]);
 
   const currentActiveIndex = pages.findIndex(p => p.key === currentPage);

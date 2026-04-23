@@ -92,7 +92,7 @@ export default function Home({ isActive }: HomeProps) {
     <div ref={containerRef} className="absolute inset-0 w-full h-full">
       {/* Layer 1: GSAP Engine Title (Negative Effect) */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[38%] md:top-1/2 -translate-y-1/2 right-[2%] md:right-[5%] font-display font-black uppercase text-[24vw] md:text-[15vw] leading-[0.8] tracking-normal pointer-events-auto whitespace-nowrap mix-blend-difference text-white">
+        <div className="absolute top-[38%] md:top-1/2 -translate-y-1/2 right-[2%] md:right-[5%] font-display font-black text-[22vw] md:text-[12vw] uppercase leading-[0.8] tracking-normal pointer-events-auto whitespace-nowrap mix-blend-difference text-white">
           {"ENGINE".split('').map((letter, i) => (
             <span key={i} ref={el => engineLettersRef.current[i] = el} className="inline-block opacity-0 translate-y-[50px]">
               {letter}
@@ -104,14 +104,14 @@ export default function Home({ isActive }: HomeProps) {
       {/* Layer 2: Normal White UI Elements */}
       <div className="absolute inset-0 pointer-events-none text-white">
         {/* Small Data Blocks on the left */}
-        <div className="absolute bottom-[10%] md:bottom-auto md:top-[35%] w-full md:w-auto px-6 md:px-0 left-0 md:left-10 flex flex-col md:flex-row gap-6 md:gap-24 text-[9px] md:text-[10px] font-semibold tracking-widest justify-center md:justify-start items-center md:items-start pointer-events-none">
+        <div className="absolute bottom-[10%] md:bottom-auto md:top-[35%] w-full md:w-auto px-6 md:px-0 left-0 md:left-10 flex flex-col md:flex-row gap-6 md:gap-24 font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase justify-center md:justify-start items-center md:items-start pointer-events-none">
            <div className="hidden md:block">00</div>
-           <div className="flex flex-col gap-4 md:gap-12 w-[85vw] md:max-w-[200px] text-center md:text-left">
+           <div className="flex flex-col gap-4 md:gap-12 w-[85vw] md:max-w-[250px] text-center md:text-left">
              <div className="hidden md:block">
-               <p className="opacity-50 font-normal">code/num</p>
-               <p className="font-bold opacity-80">GTR-W108/109</p>
+               <p className="opacity-50">code/num</p>
+               <p className="opacity-80">GTR-W108/109</p>
              </div>
-             <p className="opacity-60 leading-[1.6]">
+             <p className="font-sans text-xs md:text-sm font-medium tracking-wide uppercase leading-relaxed opacity-80">
                {descriptionLines.map((line, lineIdx) => (
                   <React.Fragment key={lineIdx}>
                     {line.split(' ').map((word, wordIdx) => (
@@ -132,15 +132,15 @@ export default function Home({ isActive }: HomeProps) {
 
         {/* Bottom text */}
         <div className="absolute top-[44%] left-6 md:top-auto md:bottom-12 md:left-10 flex flex-col gap-1 md:gap-2 pointer-events-auto text-left items-start">
-          <p ref={subtitleLabelRef} className="text-[8px] md:text-[10px] font-semibold tracking-widest uppercase opacity-70">1300 HP - GTR</p>
+          <p ref={subtitleLabelRef} className="font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase opacity-70">1300 HP - GTR</p>
           <div 
             ref={meetSpeedRef} 
-            className="text-[12vw] sm:text-[6rem] lg:text-[8.5rem] leading-[0.85] uppercase flex tracking-[-0.04em] whitespace-pre"
+            className="font-sans font-black text-4xl md:text-7xl lg:text-8xl leading-none uppercase flex tracking-normal whitespace-pre"
           >
-            <span className="font-black italic pr-1">
+            <span className="italic pr-1">
               {scrambledText.substring(0, 4)}
             </span>
-            <span className="font-normal italic opacity-90">
+            <span className="italic font-light opacity-90">
               {scrambledText.substring(4)}
             </span>
           </div>

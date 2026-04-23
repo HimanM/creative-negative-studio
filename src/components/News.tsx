@@ -99,8 +99,8 @@ export default function News({ isActive }: NewsProps) {
     <div ref={containerRef} className="absolute inset-0 w-full h-full flex flex-col md:flex-row">
       
       {/* Left 30% - Vertical Title (Negative effect) */}
-      <div className="w-full md:w-[25%] lg:w-[20%] h-[20%] md:h-full flex items-center justify-center pointer-events-none overflow-hidden">
-        <div className="font-display text-[22vw] md:text-[16vw] uppercase leading-[0.8] tracking-normal select-none origin-center md:-rotate-90 whitespace-nowrap mix-blend-difference text-white flex">
+      <div className="w-full md:w-[25%] lg:w-[20%] h-[20%] md:h-full flex items-center justify-center pt-24 md:pt-0 pointer-events-none overflow-hidden">
+        <div className="font-display font-black text-[22vw] md:text-[12vw] uppercase leading-[0.8] tracking-normal select-none origin-center md:-rotate-90 whitespace-nowrap mix-blend-difference text-white flex">
           {"NEWS".split('').map((letter, i) => (
             <span key={i} ref={el => titleLettersRef.current[i] = el} className="inline-block opacity-0 translate-y-[50px]">
               {letter}
@@ -110,9 +110,9 @@ export default function News({ isActive }: NewsProps) {
       </div>
 
       {/* Right 70% - Accordion content */}
-      <div className="relative w-full md:flex-1 h-[80%] md:h-full">
-        <div className="relative w-full h-full flex flex-col justify-start px-4 md:px-16 lg:px-24 pt-28 md:pt-40 pb-10 overflow-y-auto">
-          <div className="max-w-[1200px] w-full flex flex-col backdrop-blur-2xl bg-white/5 border border-white/10 rounded-2xl p-6 md:p-10 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]">
+      <div className="relative w-full md:flex-1 h-[80%] md:h-full overflow-hidden">
+        <div className="relative w-full h-full flex flex-col justify-center px-4 md:px-16 lg:px-24 pt-0 md:pt-16 pb-12 md:pb-6 overflow-hidden text-white drop-shadow-md">
+          <div className="max-w-[1200px] w-full flex flex-col">
             {newsItems.map((item, i) => {
               const isExpanded = expandedId === item.id;
               return (
@@ -126,19 +126,19 @@ export default function News({ isActive }: NewsProps) {
                   {/* Row header */}
                   <div className="flex items-baseline justify-between py-4 md:py-6 gap-4">
                     <div className="flex items-baseline gap-3 md:gap-6 min-w-0">
-                      <span className="text-[8px] md:text-[9px] font-light tracking-widest uppercase text-white/30 flex-shrink-0">
+                      <span className="font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase flex-shrink-0">
                         {item.date}
                       </span>
-                      <span className="text-[8px] md:text-[9px] font-light tracking-widest uppercase text-white/20 flex-shrink-0 hidden md:inline">
+                      <span className="font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase flex-shrink-0 hidden md:inline">
                         {item.code}
                       </span>
-                      <h3 className={`font-display text-base md:text-2xl lg:text-3xl uppercase leading-[0.9] tracking-[-0.02em] transition-colors duration-300 truncate ${
-                        isExpanded ? 'text-white' : 'text-white/70 group-hover:text-white'
+                      <h3 className={`font-sans font-black text-lg md:text-2xl lg:text-3xl uppercase leading-tight tracking-normal transition-opacity duration-300 ${
+                        isExpanded ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'
                       }`}>
                         {item.headline}
                       </h3>
                     </div>
-                    <span className={`text-[9px] md:text-[11px] font-light tracking-widest text-white/40 flex-shrink-0 transition-transform duration-300 ${
+                    <span className={`font-sans text-[10px] md:text-xs font-semibold tracking-widest flex-shrink-0 transition-transform duration-300 ${
                       isExpanded ? 'rotate-45' : ''
                     }`}>
                       +
@@ -148,10 +148,10 @@ export default function News({ isActive }: NewsProps) {
                   {/* Expanded content */}
                   <div
                     className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                      isExpanded ? 'max-h-[200px] md:max-h-[150px] pb-4 md:pb-6' : 'max-h-0'
+                      isExpanded ? 'max-h-[150px] md:max-h-[120px] pb-4 md:pb-6' : 'max-h-0'
                     }`}
                   >
-                    <p className="text-[9px] md:text-[10px] font-light tracking-wider uppercase leading-[1.8] text-white/50 pl-0 md:pl-[120px] max-w-[800px]">
+                    <p className="font-sans text-xs md:text-sm font-medium tracking-wide uppercase leading-relaxed pl-0 md:pl-[120px] max-w-[800px]">
                       {item.body.split(' ').map((word, wi) => {
                         return (
                           <span
