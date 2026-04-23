@@ -165,14 +165,13 @@ export default function App() {
   return (
     <div className="relative w-full h-screen overflow-hidden bg-black text-white font-sans selection:bg-white selection:text-black cursor-none">
       
-      {/* ═══════════════ PERSISTENT BACKGROUND VIDEO (z-0) ═══════════════ */}
       <video
         autoPlay
         loop
         muted
         playsInline
         className="absolute inset-0 w-full h-full object-cover z-0"
-        src="/src/public/13190440_3840_2160_24fps.mp4"
+        src="/13190440_3840_2160_24fps.mp4"
       />
 
       {/* ═══════════════ PERSISTENT GRID OVERLAY (z-[5]) ═══════════════ */}
