@@ -1,32 +1,104 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion } from 'motion/react';
 import { ShoppingCart, Menu, X } from 'lucide-react';
 import gsap from 'gsap';
 
-const scrambleChars = "XO>_-\\/[]{}—=+*^?#0123456789";
-const finalScrambleText = "MEET SPEED";
+import Home from './components/Home';
+import Work from './components/Work';
+import Studio from './components/Studio';
+import News from './components/News';
+import Contact from './components/Contact';
 
-const descriptionLines = [
-  "FOR DRIVERS SEEKING",
-  "EXCELLENCE, SHEER",
-  "PERFORMANCE MEETS",
-  "ICONIC DESIGN AND",
-  "UNSTOPPABLE ENERGY."
+type PageKey = 'home' | 'work' | 'studio' | 'news' | 'contact';
+
+const pages: { key: PageKey; label: string }[] = [
+  { key: 'home', label: 'Home' },
+  { key: 'work', label: 'Work' },
+  { key: 'studio', label: 'Studio' },
+  { key: 'news', label: 'News' },
+  { key: 'contact', label: 'Contact' },
 ];
 
+const pagesArray = pages.map(p => p.key);
+
 export default function App() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [scrambledText, setScrambledText] = useState("MEETSPCed ");
+  const [currentPage, setCurrentPage] = useState<PageKey>(() => {
+    const hash = window.location.hash.replace('#', '');
+    return pages.some(p => p.key === hash) ? (hash as PageKey) : 'home';
+  });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [cursorScale, setCursorScale] = useState(1);
 
-  const engineLettersRef = useRef<(HTMLSpanElement | null)[]>([]);
-  const descWordsRef = useRef<(HTMLSpanElement | null)[]>([]);
-  const subtitleLabelRef = useRef<HTMLParagraphElement>(null);
-  const meetSpeedRef = useRef<HTMLDivElement>(null);
+  const navIndicatorRef = useRef<HTMLDivElement>(null);
+  const navLinksRef = useRef<(HTMLAnchorElement | null)[]>([]);
 
-  // Reset dynamically populated refs on each render to prevent infinite append on state updates
-  descWordsRef.current = [];
+  const navigate = useCallback((page: PageKey) => {
+    setCurrentPage(page);
+    window.location.hash = page;
+    setIsMenuOpen(false);
+  }, []);
 
+  // Sync with Hash
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (pagesArray.includes(hash as PageKey)) {
+        setCurrentPage(hash as PageKey);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [pagesArray]);
+
+  // Wheel and Touch navigation
+  useEffect(() => {
+    let lastScrollTime = 0;
+    let touchStartY = 0;
+
+    const handleNavigate = (direction: 1 | -1) => {
+      const now = Date.now();
+      if (now - lastScrollTime < 1000) return;
+      const currentIndex = pagesArray.indexOf(currentPage);
+      if (direction === 1 && currentIndex < pagesArray.length - 1) {
+        navigate(pagesArray[currentIndex + 1]);
+        lastScrollTime = now;
+      } else if (direction === -1 && currentIndex > 0) {
+        navigate(pagesArray[currentIndex - 1]);
+        lastScrollTime = now;
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > 30) {
+        handleNavigate(e.deltaY > 0 ? 1 : -1);
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaY = touchStartY - touchEndY;
+      if (Math.abs(deltaY) > 50) {
+        handleNavigate(deltaY > 0 ? 1 : -1);
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchend', handleTouchEnd);
+    
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [currentPage, navigate, pagesArray]);
+
+  // Global mouse tracking
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
@@ -35,75 +107,65 @@ export default function App() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  // Cursor hover detection for interactive elements
   useEffect(() => {
-    // GSAP Master Timeline
-    const tl = gsap.timeline();
-
-    // Initial resets
-    gsap.set(engineLettersRef.current, { opacity: 0, y: 50 });
-    gsap.set(descWordsRef.current, { opacity: 0 });
-    gsap.set(meetSpeedRef.current, { opacity: 0 });
-    gsap.set(subtitleLabelRef.current, { opacity: 0 });
-
-    // Animation 1: ENGINE pop up letter by letter (Total ~1s)
-    tl.to(engineLettersRef.current, {
-      y: 0,
-      opacity: 1,
-      duration: 0.4,
-      stagger: 0.1,
-      ease: "back.out(2)",
-    }, 0.2);
-
-    // Subtitle Scramble & Fade
-    const scrambleObj = { progress: 0 };
-    tl.to(meetSpeedRef.current, {
-      opacity: 1,
-      duration: 0.1,
-    }, 1.0)
-    .to(scrambleObj, {
-      progress: 1,
-      duration: 0.8,
-      ease: "none",
-      onUpdate: () => {
-        const p = scrambleObj.progress;
-        const length = finalScrambleText.length;
-        let currentString = "";
-        for (let i = 0; i < length; i++) {
-          if (p >= (i / length)) {
-             currentString += finalScrambleText[i];
-          } else {
-             if (finalScrambleText[i] === " ") {
-               currentString += " ";
-             } else {
-               currentString += scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
-             }
-          }
-        }
-        setScrambledText(currentString);
+    const handleOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target.closest('a') ||
+        target.closest('button') ||
+        target.closest('[role="button"]') ||
+        target.closest('input') ||
+        target.closest('textarea') ||
+        target.closest('[data-clickable]') ||
+        target.tagName === 'A' ||
+        target.tagName === 'BUTTON'
+      ) {
+        setCursorScale(2.5);
+      } else {
+        setCursorScale(1);
       }
-    }, 1.0)
-    .to(subtitleLabelRef.current, {
-      opacity: 0.7,
-      duration: 0.5,
-      ease: "power2.out"
-    }, 1.3);
-
-    // Animation 2: Description word by word
-    tl.to(descWordsRef.current, {
-      opacity: 1,
-      duration: 0.1,
-      stagger: 0.08,
-    }, 1.0);
-
-    return () => {
-      tl.kill();
     };
+    window.addEventListener('mouseover', handleOver);
+    return () => window.removeEventListener('mouseover', handleOver);
   }, []);
+
+  // Animate nav indicator
+  useEffect(() => {
+    const activeIdx = pages.findIndex(p => p.key === currentPage);
+    const activeLink = navLinksRef.current[activeIdx];
+    const indicator = navIndicatorRef.current;
+    if (activeLink && indicator) {
+      const rect = activeLink.getBoundingClientRect();
+      const parentRect = activeLink.parentElement?.getBoundingClientRect();
+      if (parentRect) {
+        gsap.to(indicator, {
+          x: rect.left - parentRect.left,
+          width: rect.width,
+          duration: 0.4,
+          ease: "power2.out",
+        });
+      }
+    }
+  }, [currentPage]);
+
+  const currentActiveIndex = pages.findIndex(p => p.key === currentPage);
+
+  // Render the current page component
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'home': return <Home isActive={true} />;
+      case 'work': return <Work isActive={true} />;
+      case 'studio': return <Studio isActive={true} />;
+      case 'news': return <News isActive={true} />;
+      case 'contact': return <Contact isActive={true} />;
+    }
+  };
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-black text-white font-sans selection:bg-white selection:text-black cursor-none">
       
-      {/* Background Video */}
+      {/* ═══════════════ PERSISTENT BACKGROUND VIDEO (z-0) ═══════════════ */}
       <video
         autoPlay
         loop
@@ -113,138 +175,140 @@ export default function App() {
         src="/src/public/13190440_3840_2160_24fps.mp4"
       />
 
-      {/* Grid Lines Overlay */}
-      <div className="absolute inset-0 z-10 flex w-full pointer-events-none opacity-[0.10]">
+      {/* ═══════════════ PERSISTENT GRID OVERLAY (z-[5]) ═══════════════ */}
+      <div className="absolute inset-0 z-[5] flex w-full pointer-events-none opacity-[0.10]">
         <div className="w-[25%] h-full border-r border-white/50"></div>
         <div className="w-[25%] h-full border-r border-white/50"></div>
         <div className="w-[25%] h-full border-r border-white/50"></div>
         <div className="w-[25%] h-full"></div>
       </div>
 
-      {/* Layer 1: GSAP Engine Title (Negative Effect - Mix Blend Difference) */}
-      <div className="absolute inset-0 z-20 pointer-events-none mix-blend-difference text-white">
-        <div className="absolute top-[38%] md:top-1/2 -translate-y-1/2 right-[2%] md:right-[5%] font-black uppercase text-[24vw] md:text-[15vw] leading-[0.8] tracking-[-0.05em] pointer-events-auto flex">
-          {"ENGINE".split('').map((letter, i) => (
-            <span key={i} ref={el => engineLettersRef.current[i] = el} className="inline-block">
-              {letter}
-            </span>
+      {/* ═══════════════ PAGE CONTENT ═══════════════ */}
+      <div className="absolute inset-0">
+        {renderPage()}
+      </div>
+
+      {/* ═══════════════ PERSISTENT HEADER (z-[40]) ═══════════════ */}
+      <header className="absolute top-6 left-6 right-6 md:top-10 md:left-10 md:right-12 flex justify-between items-start z-[40] pointer-events-auto">
+        {/* Logo */}
+        <button
+          onClick={() => navigate('home')}
+          className="text-[2rem] md:text-[3.5rem] leading-none font-medium tracking-tighter flex items-center gap-1 text-white hover:opacity-80 transition-opacity"
+        >
+          <span>(BO<sup className="text-sm md:text-xl font-normal tracking-normal -ml-1">®</sup></span>
+          <span className="font-light mx-1 md:mx-2 text-[1.5rem] md:text-[2.5rem] tracking-tight opacity-80">&mdash;</span>
+          <span>01)</span>
+        </button>
+
+        {/* Desktop Nav */}
+        <nav className="flex items-center gap-4 md:gap-8 text-[9px] md:text-[11px] font-semibold tracking-widest uppercase mt-2 md:mt-4">
+          <div className="hidden md:flex gap-8 relative">
+            {/* Active indicator line */}
+            <div
+              ref={navIndicatorRef}
+              className="absolute -bottom-1 h-[1px] bg-[#f46830]"
+              style={{ width: 0 }}
+            />
+            {pages.map((page, i) => (
+              <a
+                key={page.key}
+                ref={el => navLinksRef.current[i] = el}
+                href="#"
+                onClick={(e) => { e.preventDefault(); navigate(page.key); }}
+                className={`transition-opacity duration-300 ${
+                  currentPage === page.key ? 'opacity-100' : 'opacity-50 hover:opacity-80'
+                }`}
+              >
+                {page.label}
+              </a>
+            ))}
+          </div>
+
+          {/* Mobile Hamburger */}
+          <button 
+            onClick={() => setIsMenuOpen(true)}
+            className="md:hidden hover:opacity-70 transition-opacity flex items-center justify-center p-1"
+          >
+            <Menu className="w-5 h-5" strokeWidth={1.5} />
+          </button>
+
+          <button className="relative ml-2 md:ml-0">
+            <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="absolute -top-2 -right-2 bg-[#f46830] text-white text-[8px] md:text-[9px] w-3 h-3 md:w-4 md:h-4 flex items-center justify-center rounded-full font-bold">2</span>
+          </button>
+        </nav>
+      </header>
+
+      {/* ═══════════════ PERSISTENT PAGE INDICATOR (z-[40]) ═══════════════ */}
+      <div className="absolute bottom-6 right-6 md:bottom-10 md:right-12 z-[40] flex items-center gap-3 pointer-events-none">
+        <span className="text-[9px] font-light tracking-widest uppercase text-white/30">
+          {String(currentActiveIndex + 1).padStart(2, '0')} / {String(pages.length).padStart(2, '0')}
+        </span>
+        <div className="flex gap-1">
+          {pages.map((page, i) => (
+            <div
+              key={page.key}
+              className={`h-[2px] transition-all duration-500 ${
+                i === currentActiveIndex ? 'w-6 bg-[#f46830]' : 'w-2 bg-white/20'
+              }`}
+            />
           ))}
         </div>
       </div>
 
-      {/* Layer 2: Normal White UI Elements */}
-      <div className="absolute inset-0 z-30 pointer-events-none text-white">
-        
-        {/* Top Header */}
-        <header className="absolute top-6 left-6 right-6 md:top-10 md:left-10 md:right-12 flex justify-between items-start pointer-events-auto">
-          <div className="text-[2rem] md:text-[3.5rem] leading-none font-medium tracking-tighter flex items-center gap-1">
-            <span>(BO<sup className="text-sm md:text-xl font-normal tracking-normal -ml-1">®</sup></span>
-            <span className="font-light mx-1 md:mx-2 text-[1.5rem] md:text-[2.5rem] tracking-tight opacity-80">&mdash;</span>
-            <span>01)</span>
-          </div>
-          <nav className="flex items-center gap-4 md:gap-8 text-[9px] md:text-[11px] font-semibold tracking-widest uppercase mt-2 md:mt-4">
-            <div className="hidden md:flex gap-8">
-              <a href="#" className="hover:opacity-70 transition-opacity">Home</a>
-              <a href="#" className="hover:opacity-70 transition-opacity">Work</a>
-              <a href="#" className="hover:opacity-70 transition-opacity">Studio</a>
-              <a href="#" className="hover:opacity-70 transition-opacity">News</a>
-              <a href="#" className="hover:opacity-70 transition-opacity">Contact</a>
-            </div>
-            {/* Mobile Hamburger */}
-            <button 
-              onClick={() => setIsMenuOpen(true)}
-              className="md:hidden hover:opacity-70 transition-opacity flex items-center justify-center p-1"
-            >
-              <Menu className="w-5 h-5" strokeWidth={1.5} />
-            </button>
-            <button className="relative ml-2 md:ml-0">
-              <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
-              <span className="absolute -top-2 -right-2 bg-[#f46830] text-white text-[8px] md:text-[9px] w-3 h-3 md:w-4 md:h-4 flex items-center justify-center rounded-full font-bold">2</span>
-            </button>
-          </nav>
-        </header>
-
-        {/* Small Data Blocks on the left */}
-        <div className="absolute bottom-[10%] md:bottom-auto md:top-[35%] w-full md:w-auto px-6 md:px-0 left-0 md:left-10 flex flex-col md:flex-row gap-6 md:gap-24 text-[9px] md:text-[10px] font-semibold tracking-widest justify-center md:justify-start items-center md:items-start pointer-events-none">
-           <div className="hidden md:block">00</div>
-           <div className="flex flex-col gap-4 md:gap-12 w-[85vw] md:max-w-[200px] text-center md:text-left">
-             <div className="hidden md:block">
-               <p className="opacity-50 font-normal">code/num</p>
-               <p className="font-bold opacity-80">GTR-W108/109</p>
-             </div>
-             <p className="opacity-60 leading-[1.6]">
-               {descriptionLines.map((line, lineIdx) => (
-                  <React.Fragment key={lineIdx}>
-                    {line.split(' ').map((word, wordIdx) => (
-                      <span 
-                        key={wordIdx} 
-                        ref={el => { if(el) descWordsRef.current.push(el); }}
-                        className="inline-block mr-[0.25em]"
-                      >
-                        {word}
-                      </span>
-                    ))}
-                    <br/>
-                  </React.Fragment>
-               ))}
-             </p>
-           </div>
-        </div>
-
-        {/* Bottom text */}
-        <div className="absolute top-[44%] left-6 md:top-auto md:bottom-12 md:left-10 flex flex-col gap-1 md:gap-2 pointer-events-auto text-left items-start">
-          <p ref={subtitleLabelRef} className="text-[8px] md:text-[10px] font-semibold tracking-widest uppercase opacity-70">1300 HP - GTR</p>
-          <div 
-            ref={meetSpeedRef} 
-            className="text-[12vw] sm:text-[6rem] lg:text-[8.5rem] leading-[0.85] uppercase flex tracking-[-0.04em] whitespace-pre"
-          >
-            <span className="font-black italic pr-1">
-              {scrambledText.substring(0, 4)}
-            </span>
-            <span className="font-normal italic opacity-90">
-              {scrambledText.substring(4)}
-            </span>
-          </div>
-        </div>
-
-      </div>
-
-      {/* Mobile Overscreen Nav Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            animate={{ opacity: 1, backdropFilter: "blur(16px)" }}
-            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            className="fixed inset-0 z-40 bg-black/60 flex flex-col items-center justify-center text-white"
-          >
+      {/* ═══════════════ MOBILE NAV OVERLAY (z-[50]) ═══════════════ */}
+      {isMenuOpen && (
+        <motion.div 
+          initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+          animate={{ opacity: 1, backdropFilter: "blur(16px)" }}
+          exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+          className="fixed inset-0 z-[50] bg-black/70 flex flex-col items-center justify-center text-white"
+        >
             <button 
               onClick={() => setIsMenuOpen(false)}
               className="absolute top-6 right-6 p-2 hover:opacity-70 transition-opacity"
             >
               <X className="w-8 h-8" strokeWidth={1.5} />
             </button>
-            <nav className="flex flex-col items-center gap-8 text-2xl font-bold tracking-widest uppercase">
-              <a href="#" className="hover:text-[#f46830] transition-colors" onClick={() => setIsMenuOpen(false)}>Home</a>
-              <a href="#" className="hover:text-[#f46830] transition-colors" onClick={() => setIsMenuOpen(false)}>Work</a>
-              <a href="#" className="hover:text-[#f46830] transition-colors" onClick={() => setIsMenuOpen(false)}>Studio</a>
-              <a href="#" className="hover:text-[#f46830] transition-colors" onClick={() => setIsMenuOpen(false)}>News</a>
-              <a href="#" className="hover:text-[#f46830] transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a>
+            <nav className="flex flex-col items-center gap-6">
+              {pages.map((page, i) => (
+                <a
+                  key={page.key}
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); navigate(page.key); }}
+                  className={`text-2xl font-display uppercase tracking-widest transition-colors duration-300 ${
+                    currentPage === page.key ? 'text-[#f46830]' : 'text-white/60 hover:text-white'
+                  }`}
+                >
+                  <span className="text-[9px] font-sans font-light tracking-widest text-white/20 mr-3">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  {page.label}
+                </a>
+              ))}
             </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </motion.div>
+      )}
 
-      {/* Custom Cursor (Difference Blended) */}
+      {/* ═══════════════ CUSTOM CURSOR (z-[60]) ═══════════════ */}
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-white mix-blend-difference pointer-events-none z-50 flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2"
+        className="fixed top-0 left-0 rounded-full border border-white mix-blend-difference pointer-events-none z-[60] flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2"
         animate={{
           x: mousePos.x,
           y: mousePos.y,
+          width: 32 * cursorScale,
+          height: 32 * cursorScale,
         }}
         transition={{ type: "spring", stiffness: 500, damping: 28, mass: 0.1 }}
       >
-        <div className="w-1.5 h-1.5 bg-white rounded-full" />
+        <motion.div
+          className="bg-white rounded-full"
+          animate={{
+            width: cursorScale > 1 ? 0 : 6,
+            height: cursorScale > 1 ? 0 : 6,
+          }}
+          transition={{ duration: 0.2 }}
+        />
       </motion.div>
 
     </div>
