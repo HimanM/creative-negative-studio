@@ -30,4 +30,12 @@ This is a vibe coded website built with **Google Gemini** and **Google AI Studio
    ```bash
    npm run dev
    ```
+## Screenshots
 
+<div align="center">
+  <img src="docs/1.png" alt="Screenshot 1" width="800" style="margin-bottom: 20px;" />
+  <img src="docs/2.png" alt="Screenshot 2" width="800" style="margin-bottom: 20px;" />
+  <img src="docs/3.png" alt="Screenshot 3" width="800" style="margin-bottom: 20px;" />
+  <img src="docs/4.png" alt="Screenshot 4" width="800" style="margin-bottom: 20px;" />
+  <img src="docs/5.png" alt="Screenshot 5" width="800" style="margin-bottom: 20px;" />
+</div>
