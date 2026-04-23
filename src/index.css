@@ -25,10 +25,6 @@ html, body, #root {
   display: none;
 }
 
-/* Custom cursor hide */
-.cursor-none, .cursor-none * {
-  cursor: none !important;
-}
 
 /* Accent focus ring for inputs */
 input:focus, textarea:focus {

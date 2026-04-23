@@ -118,11 +118,11 @@ export default function Studio({ isActive }: StudioProps) {
     <div ref={containerRef} className="absolute inset-0 w-full h-full flex flex-col md:flex-row">
       
       {/* Left 65% - Content with scrim */}
-      <div className="relative w-full md:w-[65%] h-[75%] md:h-full overflow-hidden">
-        <div className="relative w-full h-full flex flex-col justify-center pt-24 md:pt-32 pb-6 md:pb-8 px-6 md:px-16 overflow-hidden">
-          <div className="flex flex-col md:flex-row gap-8 h-full">
+      <div className="relative w-full md:w-[65%] h-[80%] md:h-full overflow-hidden">
+        <div className="relative w-full h-full flex flex-col justify-center pt-24 md:pt-32 pb-4 md:pb-8 px-6 md:px-16 overflow-hidden">
+          <div className="flex flex-col md:flex-row gap-6 md:gap-8 h-full">
             {/* Image */}
-            <div className="md:w-[45%] h-[35vh] md:h-full flex-shrink-0">
+            <div className="md:w-[45%] h-[30vh] md:h-full flex-shrink-0">
               <div ref={imageRef} className="w-full h-full overflow-hidden relative">
                 <img
                   src="/studio.png"
@@ -135,7 +135,7 @@ export default function Studio({ isActive }: StudioProps) {
                   <span className="block font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase mb-2 md:mb-4 text-white/80" ref={el => specItemsRef.current[6] = el}>
                     MANIFESTO //
                   </span>
-                  <div className="font-sans font-black text-xl md:text-3xl lg:text-4xl uppercase leading-tight tracking-normal text-white max-w-[90%] md:max-w-[80%]">
+                  <div className="font-sans font-black text-sm md:text-base lg:text-lg uppercase leading-tight tracking-normal text-white max-w-[90%] md:max-w-[80%]">
                     {manifesto.map((line, i) => (
                       <span key={i} ref={el => manifestoRef.current[i] = el} className="block mb-1 md:mb-2">
                         {line}
@@ -188,7 +188,7 @@ export default function Studio({ isActive }: StudioProps) {
       </div>
 
       {/* Right 35% - Title (Negative effect) */}
-      <div className="w-full md:w-[35%] h-[25%] md:h-full flex items-center justify-center pb-20 md:pb-0 pointer-events-none">
+      <div className="w-full md:w-[35%] h-[20%] md:h-full flex items-center justify-center pb-12 md:pb-0 pointer-events-none">
         <div className="font-display font-black text-[22vw] md:text-[12vw] uppercase leading-[0.8] tracking-normal select-none text-right mix-blend-difference text-white whitespace-nowrap">
           {"STUDIO".split('').map((letter, i) => (
             <span key={i} ref={el => titleLettersRef.current[i] = el} className="inline-block opacity-0 translate-y-[50px]">

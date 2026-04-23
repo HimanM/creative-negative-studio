@@ -163,7 +163,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-black text-white font-sans selection:bg-white selection:text-black cursor-none">
+    <div className="relative w-full h-screen overflow-hidden bg-black text-white font-sans selection:bg-white selection:text-black md:cursor-none">
       
       <video
         autoPlay
@@ -309,7 +309,7 @@ export default function App() {
 
       {/* ═══════════════ CUSTOM CURSOR (z-[60]) ═══════════════ */}
       <motion.div
-        className="fixed top-0 left-0 rounded-full border border-white mix-blend-difference pointer-events-none z-[60] flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2"
+        className="hidden md:flex fixed top-0 left-0 rounded-full border border-white mix-blend-difference pointer-events-none z-[60] items-center justify-center transform -translate-x-1/2 -translate-y-1/2"
         animate={{
           x: mousePos.x,
           y: mousePos.y,
