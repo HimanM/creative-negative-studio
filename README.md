@@ -6,6 +6,11 @@
 
 This is a vibe coded website built with **Google Gemini** and **Google AI Studio**, taking inspiration from this [Dribbble design](https://dribbble.com/shots/27304055-Car-Event-Website-Design).
 
+
+
+https://github.com/user-attachments/assets/5d0a08f6-0668-4707-ae8b-b184711953b9
+
+
 ## Frameworks & Technologies Used
 
 - **React** (v19) - Core UI library
