@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'motion/react';
-import { ShoppingCart, Menu, X } from 'lucide-react';
+import { ShoppingCart, Menu, X, Github, Linkedin } from 'lucide-react';
 import gsap from 'gsap';
 
 import Home from './components/Home';
@@ -223,6 +223,15 @@ export default function App() {
             ))}
           </div>
 
+          <div className="hidden md:flex items-center gap-4 mr-2 opacity-60">
+            <a href="https://github.com/himanm" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 hover:text-[#f46830] transition-all">
+              <Github className="w-4 h-4" />
+            </a>
+            <a href="https://linkedin.com/in/himanm" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 hover:text-[#f46830] transition-all">
+              <Linkedin className="w-4 h-4" />
+            </a>
+          </div>
+
           {/* Mobile Hamburger */}
           <button 
             onClick={() => setIsMenuOpen(true)}
@@ -285,6 +294,15 @@ export default function App() {
                   {page.label}
                 </a>
               ))}
+              
+              <div className="flex gap-6 mt-8 opacity-60">
+                <a href="https://github.com/himanm" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 hover:text-[#f46830] transition-all">
+                  <Github className="w-6 h-6" />
+                </a>
+                <a href="https://linkedin.com/in/himanm" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 hover:text-[#f46830] transition-all">
+                  <Linkedin className="w-6 h-6" />
+                </a>
+              </div>
             </nav>
         </motion.div>
       )}
