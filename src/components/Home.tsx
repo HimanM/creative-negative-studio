@@ -109,7 +109,7 @@ export default function Home({ isActive }: HomeProps) {
            <div className="flex flex-col gap-4 md:gap-12 w-[85vw] md:max-w-[250px] text-center md:text-left">
              <div className="hidden md:block">
                <p className="opacity-50">code/num</p>
-               <p className="opacity-80">GTR-W108/109</p>
+               <p className="opacity-80">CHALLENGER-SRT-2024</p>
              </div>
              <p className="font-sans text-xs md:text-sm font-medium tracking-wide uppercase leading-relaxed opacity-80">
                {descriptionLines.map((line, lineIdx) => (
@@ -132,7 +132,7 @@ export default function Home({ isActive }: HomeProps) {
 
         {/* Bottom text */}
         <div className="absolute top-[44%] left-6 md:top-auto md:bottom-12 md:left-10 flex flex-col gap-1 md:gap-2 pointer-events-auto text-left items-start">
-          <p ref={subtitleLabelRef} className="font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase opacity-70">1300 HP - GTR</p>
+          <p ref={subtitleLabelRef} className="font-sans text-[10px] md:text-xs font-semibold tracking-widest uppercase opacity-70">807 HP - DODGE CHALLENGER 2024</p>
           <div 
             ref={meetSpeedRef} 
             className="font-sans font-black text-4xl md:text-7xl lg:text-8xl leading-none uppercase flex tracking-normal whitespace-pre"

@@ -194,9 +194,9 @@ export default function App() {
           onClick={() => navigate('home')}
           className="text-[2rem] md:text-[3.5rem] leading-none font-medium tracking-tighter flex items-center gap-1 text-white hover:opacity-80 transition-opacity"
         >
-          <span>(BO<sup className="text-sm md:text-xl font-normal tracking-normal -ml-1">®</sup></span>
-          <span className="font-light mx-1 md:mx-2 text-[1.5rem] md:text-[2.5rem] tracking-tight opacity-80">&mdash;</span>
-          <span>01)</span>
+          <span>(AETHER<sup className="text-[0.35em] font-normal tracking-normal -ml-0.5 relative -top-[1.8em]">®</sup></span>
+          <span className="font-light mx-1 md:mx-2 text-[1.5rem] md:text-[2.5rem] tracking-tight opacity-80">-</span>
+          <span>DRIVE)</span>
         </button>
 
         {/* Desktop Nav */}
